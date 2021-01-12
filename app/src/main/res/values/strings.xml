@@ -5,4 +5,10 @@
     <string name="login">Login</string>
     <string name="new_user">Create a New User Profile</string>
     <string name="clear_api_key">Tap To Clear Saved API Key</string>
+    <string name="remember_login">Remember My Credentials</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="department">Department</string>
+    <string name="title">Title</string>
+    <string name="your_story">Your Story:</string>
 </resources>

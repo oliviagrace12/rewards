@@ -29,6 +29,5 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void doSave() {
-        // todo
     }
 }

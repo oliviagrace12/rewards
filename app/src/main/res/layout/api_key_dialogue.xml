@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/apiDialogueFirstName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/first_name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/apiDialogueLastName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/last_name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/apiDialogueFirstName"
+        app:layout_constraintStart_toStartOf="@+id/apiDialogueFirstName"
+        app:layout_constraintTop_toBottomOf="@+id/apiDialogueFirstName" />
+
+    <EditText
+        android:id="@+id/apiDialogueEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Student Email (.edu)"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="@+id/apiDialogueLastName"
+        app:layout_constraintStart_toStartOf="@+id/apiDialogueLastName"
+        app:layout_constraintTop_toBottomOf="@+id/apiDialogueLastName" />
+
+    <EditText
+        android:id="@+id/apiDialogueId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/student_id_number"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="@+id/apiDialogueEmail"
+        app:layout_constraintStart_toStartOf="@+id/apiDialogueEmail"
+        app:layout_constraintTop_toBottomOf="@+id/apiDialogueEmail" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

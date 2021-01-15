@@ -1,5 +1,7 @@
 package com.example.rewards.domain;
 
+import java.util.List;
+
 public class Profile {
 
     private String username;
@@ -9,6 +11,7 @@ public class Profile {
     private String department;
     private String title;
     private String story;
+    private List<Reward> rewards;
 
     public String getUsername() {
         return username;
@@ -64,5 +67,13 @@ public class Profile {
 
     public void setStory(String story) {
         this.story = story;
+    }
+
+    public List<Reward> getRewards() {
+        return rewards;
+    }
+
+    public void setRewards(List<Reward> rewards) {
+        this.rewards = rewards;
     }
 }

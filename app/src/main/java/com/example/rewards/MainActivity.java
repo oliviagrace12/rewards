@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,23 +22,27 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    MyProjectSharedPreference sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        runApiKeyDialogue();
+        sharedPreferences = new MyProjectSharedPreference(this);
+
+        if (sharedPreferences.getValue(this.getString(R.string.api_key)).isEmpty()) {
+            runApiKeyDialogue();
+        }
     }
 
     public void createNewProfile(View view) {
         Intent intent = new Intent(this, CreateProfileActivity.class);
+        intent.putExtra(this.getString(R.string.api_key), sharedPreferences.getValue(this.getString(R.string.api_key)));
         startActivity(intent);
     }
 
     public void runApiKeyDialogue() {
-        // Dialog with a layout
-
-        // Inflate the dialog's layout
         LayoutInflater inflater = LayoutInflater.from(this);
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.api_key_dialogue, null);
 
@@ -50,27 +56,64 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton("OK", (dialog, id) -> {
 
-            // Multiply the 2 values together and display the results
             EditText firstName = view.findViewById(R.id.apiDialogueFirstName);
             EditText lastName = view.findViewById(R.id.apiDialogueLastName);
             EditText email = view.findViewById(R.id.apiDialogueEmail);
             EditText studentId = view.findViewById(R.id.apiDialogueId);
 
-            GetStudentApiKeyRunnable runnable = new GetStudentApiKeyRunnable(
+            GetStudentApiKeyRunnable runnable = new GetStudentApiKeyRunnable(this,
                     firstName.getText().toString(), lastName.getText().toString(),
                     studentId.getText().toString(), email.getText().toString());
 
-            Toast.makeText(MainActivity.this, "You entered: " + firstName.getText().toString() +
-                            lastName.getText().toString() + studentId.getText().toString() + email.getText().toString(),
-                    Toast.LENGTH_SHORT).show();
-//            new Thread(runnable).start();
+            new Thread(runnable).start();
+
         });
+
         builder.setNegativeButton("CANCEL", (dialog, id) -> {
-            // todo quit app?
+            runApiKeyDialogue();
         });
 
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
+    public void setApiKey(String apiKey) {
+        sharedPreferences.save(this.getString(R.string.api_key), apiKey);
+    }
+
+    public void runApiKeyConfirmationDialogue(String firstName, String lastName, String email,
+                                              String studentId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setIcon(R.drawable.logo);
+        builder.setTitle("API Key Received And Stored");
+        builder.setMessage("Name: " + firstName + " " + lastName + "\n"
+                + "Student ID: " + studentId + "\n"
+                + "Email: " + email + "\n"
+                + "API Key: " + sharedPreferences.getValue(this.getString(R.string.api_key)));
+        builder.setPositiveButton("OK", (dialog, id) -> {
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void runApiKeyErrorDialogue(String localizedMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setIcon(R.drawable.logo);
+        builder.setTitle("Unable To Retrieve API Key");
+        builder.setMessage("Error encountered in requesting API key: " + localizedMessage);
+        builder.setPositiveButton("OK", (dialog, id) -> {
+            runApiKeyDialogue();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void clearApiKey(View view) {
+        sharedPreferences.removeValue(this.getString(R.string.api_key));
+        runApiKeyDialogue();
+    }
 }

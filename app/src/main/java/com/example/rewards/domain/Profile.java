@@ -9,8 +9,9 @@ public class Profile {
     private String firstName;
     private String lastName;
     private String department;
-    private String title;
+    private String position;
     private String story;
+    private String bit46EncodedPhoto = "";
     private List<Reward> rewards;
 
     public String getUsername() {
@@ -53,12 +54,12 @@ public class Profile {
         this.department = department;
     }
 
-    public String getTitle() {
-        return title;
+    public String getPosition() {
+        return position;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getStory() {
@@ -75,5 +76,13 @@ public class Profile {
 
     public void setRewards(List<Reward> rewards) {
         this.rewards = rewards;
+    }
+
+    public String getBit46EncodedPhoto() {
+        return bit46EncodedPhoto;
+    }
+
+    public void setBit46EncodedPhoto(String bit46EncodedPhoto) {
+        this.bit46EncodedPhoto = bit46EncodedPhoto;
     }
 }

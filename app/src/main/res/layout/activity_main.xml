@@ -109,6 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/white"
+        android:onClick="clearApiKey"
         android:text="@string/clear_api_key"
         android:textColor="@color/orange"
         app:layout_constraintBottom_toBottomOf="@+id/loginBackground"

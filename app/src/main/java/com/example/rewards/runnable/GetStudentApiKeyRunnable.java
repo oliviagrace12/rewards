@@ -3,6 +3,8 @@ package com.example.rewards.runnable;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.rewards.MainActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,8 +23,10 @@ public class GetStudentApiKeyRunnable implements Runnable {
     private final String lastName;
     private final String studentId;
     private final String email;
+    private final MainActivity mainActivity;
 
-    public GetStudentApiKeyRunnable(String firstName, String lastName, String studentId, String email) {
+    public GetStudentApiKeyRunnable(MainActivity mainActivity, String firstName, String lastName, String studentId, String email) {
+        this.mainActivity = mainActivity;
         this.firstName = firstName;
         this.lastName = lastName;
         this.studentId = studentId;
@@ -32,25 +36,37 @@ public class GetStudentApiKeyRunnable implements Runnable {
     @Override
     public void run() {
         String urlString = new Uri.Builder()
-                .path("http://christopherhield.org/api/Profile/GetStudentApiKey")
-                .appendQueryParameter("firstName=", firstName)
-                .appendQueryParameter("lastname=", lastName)
-                .appendQueryParameter("studentId=", studentId)
-                .appendQueryParameter("email=", email)
+                .scheme("http")
+                .authority("christopherhield.org")
+                .appendPath("api")
+                .appendPath("Profile")
+                .appendPath("GetStudentApiKey")
+                .appendQueryParameter("firstName", firstName)
+                .appendQueryParameter("lastname", lastName)
+                .appendQueryParameter("studentId", studentId)
+                .appendQueryParameter("email", email)
                 .build().toString();
 
         String responseJson = requestData(urlString);
-
         try {
-            parse(responseJson);
+            String apiKey = parse(responseJson);
+            mainActivity.runOnUiThread(() -> {
+                mainActivity.setApiKey(apiKey);
+                mainActivity.runApiKeyConfirmationDialogue(firstName, lastName, email, studentId);
+            });
         } catch (JSONException e) {
             Log.e(TAG, "Error in parsing info: " + e.getLocalizedMessage(), e);
+            mainActivity.runOnUiThread(() -> {
+                mainActivity.setApiKey("invalid");
+                mainActivity.runApiKeyErrorDialogue(e.getLocalizedMessage());
+            });
         }
     }
 
-    private void parse(String responseJson) throws JSONException {
+    private String parse(String responseJson) throws JSONException {
+        Log.i(TAG, "parse response json: " + responseJson);
         JSONObject object = new JSONObject(responseJson);
-        String apiKey = object.getString("apiKey");
+        return object.getString("apiKey");
     }
 
     private String requestData(String urlString) {
@@ -60,6 +76,8 @@ public class GetStudentApiKeyRunnable implements Runnable {
         try {
             conn = (HttpURLConnection) new URL(urlString).openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
             conn.connect();
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 Log.d(TAG, "HTTP ResponseCode NOT OK: " + conn.getResponseCode());

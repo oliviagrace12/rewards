@@ -32,6 +32,10 @@ public class CreateProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.icon);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         apiKey = this.getIntent().getStringExtra(this.getString(R.string.api_key));
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -54,7 +58,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
-            doSave();
+            displaySaveDialogue();
         }
         return true;
     }
@@ -63,9 +67,11 @@ public class CreateProfileActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Save Changes?");
         builder.setIcon(R.drawable.logo);
-        builder.setView(view);
+        builder.setPositiveButton("OK", (dialog, id) -> doSave());
+        builder.setNegativeButton("CANCEL", (dialog, id) -> {});
 
-        // todo left off here
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void doSave() {

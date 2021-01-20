@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ProfileScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateProfileActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/positionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/position_label"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/pointsAwardedLabel"
+            app:layout_constraintTop_toBottomOf="@+id/departmentValue" />
+
+        <TextView
+            android:id="@+id/pointsToAwardLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/points_to_award"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/pointsAwardedLabel"
+            app:layout_constraintTop_toBottomOf="@+id/positionValue" />
+
+        <ImageView
+            android:id="@+id/profilePhoto"
+            android:layout_width="160dp"
+            android:layout_height="234dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
+            app:layout_constraintTop_toBottomOf="@+id/profileLocation"
+            app:srcCompat="@drawable/default_photo" />
+
+        <TextView
+            android:id="@+id/profileFirstLastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/last_name"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/profileUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="TextView"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            app:layout_constraintBaseline_toBaselineOf="@+id/profileFirstLastName"
+            app:layout_constraintStart_toEndOf="@+id/profileFirstLastName" />
+
+        <TextView
+            android:id="@+id/profileLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
+            app:layout_constraintTop_toBottomOf="@+id/profileFirstLastName" />
+
+        <TextView
+            android:id="@+id/pointsAwardedLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/points_awarded"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/profilePhoto"
+            app:layout_constraintTop_toTopOf="@+id/profilePhoto" />
+
+        <TextView
+            android:id="@+id/departmentLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/department_label_string"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/pointsAwardedLabel"
+            app:layout_constraintTop_toBottomOf="@+id/pointsAwardedValue" />
+
+        <TextView
+            android:id="@+id/pointsAwardedValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/pointsAwardedLabel"
+            app:layout_constraintTop_toBottomOf="@+id/pointsAwardedLabel" />
+
+        <TextView
+            android:id="@+id/departmentValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/pointsAwardedLabel"
+            app:layout_constraintTop_toBottomOf="@+id/departmentLabel" />
+
+        <TextView
+            android:id="@+id/positionValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/pointsAwardedLabel"
+            app:layout_constraintTop_toBottomOf="@+id/positionLabel" />
+
+        <TextView
+            android:id="@+id/pointsToAwardValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/pointsAwardedLabel"
+            app:layout_constraintTop_toBottomOf="@+id/pointsToAwardLabel" />
+
+        <TextView
+            android:id="@+id/profileStoryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/your_story"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
+            app:layout_constraintTop_toBottomOf="@+id/profilePhoto" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
+            app:layout_constraintTop_toBottomOf="@+id/profileStoryLabel" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+

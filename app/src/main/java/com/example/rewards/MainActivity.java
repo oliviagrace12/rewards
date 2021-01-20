@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.icon);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         sharedPreferences = new MyProjectSharedPreference(this);
 
         if (sharedPreferences.getValue(this.getString(R.string.api_key)).isEmpty()) {

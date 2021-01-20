@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/profileImage"
             android:layout_width="151dp"
             android:layout_height="213dp"
             android:layout_marginStart="8dp"
@@ -32,7 +32,7 @@
             android:hint="@string/username"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageButton2"
+            app:layout_constraintStart_toEndOf="@+id/profileImage"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
@@ -82,7 +82,7 @@
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+            app:layout_constraintTop_toBottomOf="@+id/profileImage" />
 
         <EditText
             android:id="@+id/inputTitle"

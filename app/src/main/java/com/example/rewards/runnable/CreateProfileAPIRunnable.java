@@ -45,9 +45,11 @@ public class CreateProfileAPIRunnable implements Runnable{
                 .appendQueryParameter("location", "todo") //todo
                 .build().toString();
 
+        saveProfile(urlString);
+
     }
 
-    private String requestData(String urlString) {
+    private String saveProfile(String urlString) {
         Log.i(TAG, "Requesting data using URL: " + urlString);
         HttpURLConnection conn = null;
         StringBuilder stringBuilder = new StringBuilder();

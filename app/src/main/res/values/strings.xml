@@ -21,4 +21,7 @@
     <string name="department_label_string">Department:</string>
     <string name="position_label">Position:</string>
     <string name="points_to_award">Points To Award:</string>
+    <string name="profile">profile</string>
+    <string name="last_first_name">%1$s, %2$s</string>
+    <string name="username_in_parens">(%s)</string>
 </resources>

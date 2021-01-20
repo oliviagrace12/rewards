@@ -46,7 +46,6 @@ public class CreateProfileAPIRunnable implements Runnable{
                 .build().toString();
 
         saveProfile(urlString);
-
     }
 
     private String saveProfile(String urlString) {

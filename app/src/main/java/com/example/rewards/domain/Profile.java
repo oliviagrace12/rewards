@@ -1,5 +1,6 @@
 package com.example.rewards.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Profile {
@@ -12,7 +13,8 @@ public class Profile {
     private String position;
     private String story;
     private String bit46EncodedPhoto = "";
-    private List<Reward> rewards;
+    private List<Reward> rewards = new ArrayList<>();
+    private int pointsToAward;
 
     public String getUsername() {
         return username;
@@ -84,5 +86,18 @@ public class Profile {
 
     public void setBit46EncodedPhoto(String bit46EncodedPhoto) {
         this.bit46EncodedPhoto = bit46EncodedPhoto;
+    }
+
+    public int getPointsToAward() {
+        return pointsToAward;
+    }
+
+    public void setPointsToAward(int pointsToAward) {
+        this.pointsToAward = pointsToAward;
+    }
+
+    public int getPointsAwarded() {
+        return rewards.isEmpty() ? 0
+                : rewards.stream().map(Reward::getAmount).reduce(Integer::sum).get();
     }
 }

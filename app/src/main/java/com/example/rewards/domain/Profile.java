@@ -14,6 +14,7 @@ public class Profile {
     private String story;
     private String bit46EncodedPhoto = "";
     private List<Reward> rewards = new ArrayList<>();
+    private int pointsAwarded = 0;
     private int pointsToAward;
 
     public String getUsername() {
@@ -97,7 +98,10 @@ public class Profile {
     }
 
     public int getPointsAwarded() {
-        return rewards.isEmpty() ? 0
-                : rewards.stream().map(Reward::getAmount).reduce(Integer::sum).get();
+        return pointsAwarded;
+    }
+
+    public void setPointsAwarded(int pointsAwarded) {
+        this.pointsAwarded = pointsAwarded;
     }
 }

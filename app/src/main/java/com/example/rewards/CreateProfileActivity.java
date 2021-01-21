@@ -36,17 +36,15 @@ public class CreateProfileActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.drawable.icon);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-        apiKey = this.getIntent().getStringExtra(this.getString(R.string.api_key));
+        apiKey = getIntent().getStringExtra(this.getString(R.string.api_key));
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.activity_create_profile, null);
-        usernameEditText = view.findViewById(R.id.inputUsername);
-        passwordEditText = view.findViewById(R.id.inputPassword);
-        firstNameEditText = view.findViewById(R.id.inputFirstName);
-        lastNameEditText = view.findViewById(R.id.inputLastName);
-        departmentEditText = view.findViewById(R.id.inputDepartment);
-        titleEditText = view.findViewById(R.id.inputTitle);
-        storyEditText = view.findViewById(R.id.yourStoryInput);
+        usernameEditText = findViewById(R.id.inputUsername);
+        passwordEditText = findViewById(R.id.inputPassword);
+        firstNameEditText = findViewById(R.id.inputFirstName);
+        lastNameEditText = findViewById(R.id.inputLastName);
+        departmentEditText = findViewById(R.id.inputDepartment);
+        titleEditText = findViewById(R.id.inputTitle);
+        storyEditText = findViewById(R.id.yourStoryInput);
     }
 
     @Override
@@ -70,7 +68,6 @@ public class CreateProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", (dialog, id) -> {
             Profile profile = createProfile();
             saveProfile(profile);
-            displayProfile(profile);
         });
         builder.setNegativeButton("CANCEL", (dialog, id) -> {});
 
@@ -78,15 +75,8 @@ public class CreateProfileActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void displayProfile(Profile profile) {
-        Intent intent = new Intent(this, ViewProfileActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra(this.getString(R.string.profile), gson.toJson(profile));
-        startActivity(intent);
-    }
-
     private void saveProfile(Profile profile) {
-        new Thread(new CreateProfileAPIRunnable(profile, apiKey)).start();
+        new Thread(new CreateProfileAPIRunnable(profile, apiKey, this)).start();
     }
 
     private Profile createProfile() {

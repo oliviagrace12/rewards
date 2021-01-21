@@ -1,9 +1,15 @@
 package com.example.rewards.runnable;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.rewards.CreateProfileActivity;
+import com.example.rewards.R;
+import com.example.rewards.ViewProfileActivity;
 import com.example.rewards.domain.Profile;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,16 +20,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class CreateProfileAPIRunnable implements Runnable{
+public class CreateProfileAPIRunnable implements Runnable {
 
     private static final String TAG = "CreateProfileAPIRunnable";
 
     private final Profile profile;
     private final String apiKey;
+    private final CreateProfileActivity createProfileActivity;
 
-    public CreateProfileAPIRunnable(Profile profile, String apiKey) {
+    public CreateProfileAPIRunnable(Profile profile, String apiKey, CreateProfileActivity createProfileActivity) {
         this.profile = profile;
         this.apiKey = apiKey;
+        this.createProfileActivity = createProfileActivity;
     }
 
     @Override
@@ -45,8 +53,20 @@ public class CreateProfileAPIRunnable implements Runnable{
                 .appendQueryParameter("location", "todo") //todo
                 .build().toString();
 
-        saveProfile(urlString);
+//        saveProfile(urlString);
+//        Toast.makeText(createProfileActivity,
+//                "Saved profile [username=" + profile.getUsername() + ", password="
+//                        + profile.getPassword() + "]", Toast.LENGTH_LONG).show();
+        displayProfile(profile);
     }
+
+    private void displayProfile(Profile profile) {
+        Intent intent = new Intent(createProfileActivity, ViewProfileActivity.class);
+        Gson gson = new Gson();
+        intent.putExtra(createProfileActivity.getString(R.string.profile), gson.toJson(profile));
+        createProfileActivity.startActivity(intent);
+    }
+
 
     private String saveProfile(String urlString) {
         Log.i(TAG, "Requesting data using URL: " + urlString);
@@ -59,7 +79,7 @@ public class CreateProfileAPIRunnable implements Runnable{
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("ApiKey", apiKey);
             conn.setDoOutput(true);
-            try(OutputStream os = conn.getOutputStream()) {
+            try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = profile.getBit46EncodedPhoto().getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }

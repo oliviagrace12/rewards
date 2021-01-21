@@ -49,10 +49,10 @@ public class ViewProfileActivity extends AppCompatActivity {
                 R.string.last_first_name, profile.getLastName(), profile.getFirstName()));
         usernameView.setText(getString(R.string.username_in_parens, profile.getUsername()));
         locationView.setText("todo location"); //todo
-        pointsAwardedView.setText(profile.getPointsAwarded());
+        pointsAwardedView.setText(String.valueOf(profile.getPointsAwarded()));
         departmentView.setText(profile.getDepartment());
         positionView.setText(profile.getPosition());
-        pointsToAwardView.setText(profile.getPointsToAward());
+        pointsToAwardView.setText(String.valueOf(profile.getPointsToAward()));
         storyView.setText(profile.getStory());
     }
 

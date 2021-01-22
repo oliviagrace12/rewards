@@ -11,6 +11,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,7 +30,9 @@ import com.example.rewards.runnable.CreateProfileAPIRunnable;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -90,7 +93,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Profile Picture");
         builder.setMessage("Take picture from:");
-        builder.setNegativeButton("GALLERY", (dialog, id) -> {});
+        builder.setNegativeButton("GALLERY", (dialog, id) -> doGallery());
         builder.setPositiveButton("CAMERA", (dialog, id) -> doCamera());
         builder.setNeutralButton("CANCEL", (dialog, id) -> {});
         builder.setIcon(R.drawable.icon);
@@ -113,6 +116,12 @@ public class CreateProfileActivity extends AppCompatActivity {
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
 
+    public void doGallery() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, REQUEST_IMAGE_GALLERY);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -123,14 +132,19 @@ public class CreateProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, "onActivityResult: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
+        } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
+            try {
+                processGallery(data);
+            } catch (Exception e) {
+                Toast.makeText(this, "onActivityResult: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
         }
     }
 
     private void processFullCameraImage() {
-
         Uri selectedImage = Uri.fromFile(currentImageFile);
         imageButton.setImageURI(selectedImage);
-
     }
 
     private File createImageFile() throws IOException {
@@ -142,6 +156,21 @@ public class CreateProfileActivity extends AppCompatActivity {
                 ".jpg",    /* suffix */
                 storageDir      /* directory */
         );
+    }
+
+    private void processGallery(Intent data) {
+        Uri galleryImageUri = data.getData();
+        if (galleryImageUri == null) {
+            return;
+        }
+        InputStream imageStream = null;
+        try {
+            imageStream = getContentResolver().openInputStream(galleryImageUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+        imageButton.setImageBitmap(selectedImage);
     }
 
     private void displaySaveDialogue() {

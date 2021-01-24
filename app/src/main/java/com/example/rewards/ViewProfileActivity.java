@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,6 +65,12 @@ public class ViewProfileActivity extends AppCompatActivity {
         storyView.setText(profile.getStory());
         imageView.setImageBitmap(textToImage(profile.getBit46EncodedPhoto()));
         rewardsLabel.setText(getString(R.string.rewards_profile, profile.getRewards().size()));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.create_profile_menu, menu);
+        return true;
     }
 
     public Bitmap textToImage(String imageString64) {

@@ -26,17 +26,20 @@ public class CreateProfileAPIRunnable implements Runnable {
 
     private final Profile profile;
     private final String apiKey;
-    private final CreateProfileActivity createProfileActivity;
 
-    public CreateProfileAPIRunnable(Profile profile, String apiKey, CreateProfileActivity createProfileActivity) {
+    public CreateProfileAPIRunnable(Profile profile, String apiKey) {
         this.profile = profile;
         this.apiKey = apiKey;
-        this.createProfileActivity = createProfileActivity;
     }
 
     @Override
     public void run() {
-        String urlString = new Uri.Builder()
+        String urlString = createUrlString();
+        saveProfile(urlString);
+    }
+
+    private String createUrlString() {
+        return new Uri.Builder()
                 .scheme("http")
                 .authority("christopherhield.org")
                 .appendPath("api")
@@ -52,8 +55,6 @@ public class CreateProfileAPIRunnable implements Runnable {
                 .appendQueryParameter("remainingPointsToAward", "1000")
                 .appendQueryParameter("location", "todo") //todo
                 .build().toString();
-
-        saveProfile(urlString);
     }
 
     private void saveProfile(String urlString) {
@@ -69,7 +70,6 @@ public class CreateProfileAPIRunnable implements Runnable {
             conn.connect();
 
             try (OutputStream os = conn.getOutputStream()) {
-
                 byte[] input = profile.getBit46EncodedPhoto().getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }

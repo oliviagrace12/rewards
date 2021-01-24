@@ -4,21 +4,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.rewards.runnable.GetStudentApiKeyRunnable;
-
-import java.util.Locale;
+import com.example.rewards.runnable.LoginAPIRunnable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +31,16 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.getValue(this.getString(R.string.api_key)).isEmpty()) {
             runApiKeyDialogue();
         }
+    }
+
+    public void login(View view) {
+        EditText usernameInput = findViewById(R.id.usernameInput);
+        EditText passwordInput = findViewById(R.id.passwordInput);
+        new Thread(new LoginAPIRunnable(usernameInput.getText().toString(),
+                passwordInput.getText().toString(),
+                sharedPreferences.getValue(this.getString(R.string.api_key)),
+                this))
+                .start();
     }
 
     public void createNewProfile(View view) {

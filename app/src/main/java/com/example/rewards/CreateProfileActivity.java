@@ -190,7 +190,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void saveProfile(Profile profile) {
-        new Thread(new CreateProfileAPIRunnable(profile, apiKey, this)).start();
+        new Thread(new CreateProfileAPIRunnable(profile, apiKey)).start();
     }
 
     private Profile createProfile() {

@@ -16,6 +16,7 @@ public class Profile {
     private List<Reward> rewards = new ArrayList<>();
     private int pointsAwarded = 0;
     private int pointsToAward;
+    private String location;
 
     public String getUsername() {
         return username;
@@ -103,5 +104,13 @@ public class Profile {
 
     public void setPointsAwarded(int pointsAwarded) {
         this.pointsAwarded = pointsAwarded;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

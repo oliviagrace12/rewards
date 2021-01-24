@@ -15,7 +15,7 @@ public class Profile {
     private String bit46EncodedPhoto = "";
     private List<Reward> rewards = new ArrayList<>();
     private int pointsAwarded = 0;
-    private int pointsToAward;
+    private int remainingPointsToAward;
     private String location;
 
     public String getUsername() {
@@ -90,12 +90,12 @@ public class Profile {
         this.bit46EncodedPhoto = bit46EncodedPhoto;
     }
 
-    public int getPointsToAward() {
-        return pointsToAward;
+    public int getRemainingPointsToAward() {
+        return remainingPointsToAward;
     }
 
-    public void setPointsToAward(int pointsToAward) {
-        this.pointsToAward = pointsToAward;
+    public void setRemainingPointsToAward(int remainingPointsToAward) {
+        this.remainingPointsToAward = remainingPointsToAward;
     }
 
     public int getPointsAwarded() {

@@ -9,7 +9,6 @@ import com.example.rewards.R;
 import com.example.rewards.ViewProfileActivity;
 import com.example.rewards.domain.Profile;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +66,7 @@ public class LoginAPIRunnable implements Runnable {
         profile.setPassword(object.getString("password"));
         profile.setDepartment(object.getString("department"));
         profile.setPosition(object.getString("position"));
-        profile.setPointsToAward(object.getInt("remainingPointsToAward"));
+        profile.setRemainingPointsToAward(object.getInt("remainingPointsToAward"));
         profile.setLocation(object.getString("location"));
         profile.setStory(object.getString("story"));
         profile.setBit46EncodedPhoto(object.getString("imageBytes"));

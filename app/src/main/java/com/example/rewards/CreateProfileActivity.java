@@ -12,12 +12,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rewards.domain.Profile;
@@ -33,6 +37,7 @@ import java.util.Locale;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
+    private static final int MAX_LEN = 360;
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText firstNameEditText;
@@ -40,6 +45,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     private EditText departmentEditText;
     private EditText titleEditText;
     private EditText storyEditText;
+    private TextView storyLabel;
     private ImageButton imageButton;
     private String apiKey;
 
@@ -66,7 +72,34 @@ public class CreateProfileActivity extends AppCompatActivity {
         departmentEditText = findViewById(R.id.inputDepartment);
         titleEditText = findViewById(R.id.inputTitle);
         storyEditText = findViewById(R.id.yourStoryInput);
+        storyLabel = findViewById(R.id.yourStoryLabel);
+        storyLabel.setText(getString(R.string.your_story, 0, MAX_LEN));
+        setupStoryEditText();
         imageButton = findViewById(R.id.profileImage);
+    }
+
+    private void setupStoryEditText() {
+        storyEditText.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(MAX_LEN) // Specifies a max text length
+        });
+
+        storyEditText.addTextChangedListener(
+                new TextWatcher() {
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        int len = s.toString().length();
+                        String countText = getString(R.string.your_story, len, MAX_LEN);
+                        storyLabel.setText(countText);
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
     }
 
     @Override
@@ -203,6 +236,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         profile.setPosition(titleEditText.getText().toString());
         profile.setStory(storyEditText.getText().toString());
         profile.setBit46EncodedPhoto(getImageInBase64(imageButton));
+        profile.setRemainingPointsToAward(1000);
 
         return profile;
     }

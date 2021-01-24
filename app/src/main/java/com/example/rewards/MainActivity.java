@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.rewards.runnable.GetStudentApiKeyRunnable;
@@ -16,6 +17,9 @@ import com.example.rewards.runnable.LoginAPIRunnable;
 public class MainActivity extends AppCompatActivity {
 
     MyProjectSharedPreference sharedPreferences;
+
+    private EditText usernameInput;
+    private EditText passwordInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +35,34 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.getValue(this.getString(R.string.api_key)).isEmpty()) {
             runApiKeyDialogue();
         }
+
+        usernameInput = findViewById(R.id.usernameInput);
+        passwordInput = findViewById(R.id.passwordInput);
+
+        if (hasSavedLoginInfo()) {
+            usernameInput.setText(sharedPreferences.getValue(getString(R.string.username)));
+            passwordInput.setText(sharedPreferences.getValue(getString(R.string.password)));
+        }
+    }
+
+    private boolean hasSavedLoginInfo() {
+        return sharedPreferences.hasValue(getString(R.string.username)) &&
+                sharedPreferences.hasValue(getString(R.string.password));
     }
 
     public void login(View view) {
-        EditText usernameInput = findViewById(R.id.usernameInput);
-        EditText passwordInput = findViewById(R.id.passwordInput);
-        new Thread(new LoginAPIRunnable(usernameInput.getText().toString(),
-                passwordInput.getText().toString(),
-                sharedPreferences.getValue(this.getString(R.string.api_key)),
-                this))
+
+        CheckBox rememberLogin = findViewById(R.id.loginCheckBox);
+        String username = usernameInput.getText().toString();
+        String password = passwordInput.getText().toString();
+
+        if (rememberLogin.isChecked()) {
+            sharedPreferences.save(getString(R.string.username), username);
+            sharedPreferences.save(getString(R.string.password), password);
+        }
+
+        new Thread(new LoginAPIRunnable(username, password,
+                sharedPreferences.getValue(this.getString(R.string.api_key)), this))
                 .start();
     }
 

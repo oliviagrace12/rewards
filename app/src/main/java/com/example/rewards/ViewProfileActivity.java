@@ -23,6 +23,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     private TextView pointsToAwardView;
     private TextView storyView;
     private ImageView imageView;
+    private TextView rewardsLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         pointsToAwardView = findViewById(R.id.pointsToAwardValue);
         storyView = findViewById(R.id.profileStoryValue);
         imageView = findViewById(R.id.profilePhoto);
+        rewardsLabel = findViewById(R.id.profileRewardsLabel);
 
         setFields(profile);
     }
@@ -58,9 +60,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         pointsAwardedView.setText(String.valueOf(profile.getPointsAwarded()));
         departmentView.setText(profile.getDepartment());
         positionView.setText(profile.getPosition());
-        pointsToAwardView.setText(String.valueOf(profile.getPointsToAward()));
+        pointsToAwardView.setText(String.valueOf(profile.getRemainingPointsToAward()));
         storyView.setText(profile.getStory());
         imageView.setImageBitmap(textToImage(profile.getBit46EncodedPhoto()));
+        rewardsLabel.setText(getString(R.string.rewards_profile, profile.getRewards().size()));
     }
 
     public Bitmap textToImage(String imageString64) {

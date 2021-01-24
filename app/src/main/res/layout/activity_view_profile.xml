@@ -143,7 +143,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/your_story"
+            android:text="@string/your_story_view"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
@@ -158,6 +158,25 @@
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
             app:layout_constraintTop_toBottomOf="@+id/profileStoryLabel" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/profileRewardsRecyclerView"
+            android:layout_width="328dp"
+            android:layout_height="27dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
+            app:layout_constraintTop_toBottomOf="@+id/profileRewardsLabel" />
+
+        <TextView
+            android:id="@+id/profileRewardsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/rewards_profile"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/profileFirstLastName"
+            app:layout_constraintTop_toBottomOf="@+id/profileStoryValue" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

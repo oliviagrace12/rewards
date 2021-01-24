@@ -31,6 +31,9 @@ class MyProjectSharedPreference {
         return text;
     }
 
+    boolean hasValue(String key) {
+        return prefs.contains(key);
+    }
 
     void clearAll() {
         Log.d(TAG, "clearAll: ");

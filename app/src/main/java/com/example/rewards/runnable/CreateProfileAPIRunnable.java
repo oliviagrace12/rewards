@@ -53,25 +53,12 @@ public class CreateProfileAPIRunnable implements Runnable {
                 .appendQueryParameter("location", "todo") //todo
                 .build().toString();
 
-//        saveProfile(urlString);
-//        Toast.makeText(createProfileActivity,
-//                "Saved profile [username=" + profile.getUsername() + ", password="
-//                        + profile.getPassword() + "]", Toast.LENGTH_LONG).show();
-        displayProfile(profile);
+        saveProfile(urlString);
     }
 
-    private void displayProfile(Profile profile) {
-        Intent intent = new Intent(createProfileActivity, ViewProfileActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra(createProfileActivity.getString(R.string.profile), gson.toJson(profile));
-        createProfileActivity.startActivity(intent);
-    }
-
-
-    private String saveProfile(String urlString) {
+    private void saveProfile(String urlString) {
         Log.i(TAG, "Requesting data using URL: " + urlString);
-        HttpURLConnection conn = null;
-        StringBuilder stringBuilder = new StringBuilder();
+        HttpURLConnection conn;
         try {
             conn = (HttpURLConnection) new URL(urlString).openConnection();
             conn.setRequestMethod("POST");
@@ -79,25 +66,34 @@ public class CreateProfileAPIRunnable implements Runnable {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("ApiKey", apiKey);
             conn.setDoOutput(true);
+            conn.connect();
+
             try (OutputStream os = conn.getOutputStream()) {
+
                 byte[] input = profile.getBit46EncodedPhoto().getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
-            conn.connect();
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.d(TAG, "HTTP ResponseCode NOT OK: " + conn.getResponseCode());
-                return "";
+
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+                Log.i(TAG, "HTTP ResponseCode NOT OK: " + conn.getResponseCode());
+                String errorMessage = readFromStream(conn.getErrorStream());
+                Log.i(TAG, "Error message: " + errorMessage);
+            } else {
+                String responseMessage = readFromStream(conn.getInputStream());
+                Log.i(TAG, "Response: " + responseMessage);
             }
-            InputStream is = conn.getInputStream();
-            BufferedReader reader = new BufferedReader((new InputStreamReader(is)));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append('\n');
-            }
-            Log.d(TAG, "Response: " + stringBuilder.toString());
         } catch (IOException ex) {
             Log.e(TAG, "Error in getting info: " + ex.getLocalizedMessage(), ex);
-            return "";
+        }
+    }
+
+    private String readFromStream(InputStream inputStream) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader reader =
+                new BufferedReader((new InputStreamReader(inputStream)));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line).append('\n');
         }
 
         return stringBuilder.toString();

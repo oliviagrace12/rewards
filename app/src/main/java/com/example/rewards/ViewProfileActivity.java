@@ -2,7 +2,11 @@ package com.example.rewards;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rewards.domain.Profile;
@@ -18,6 +22,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     private TextView positionView;
     private TextView pointsToAwardView;
     private TextView storyView;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         positionView = findViewById(R.id.positionValue);
         pointsToAwardView = findViewById(R.id.pointsToAwardValue);
         storyView = findViewById(R.id.profileStoryValue);
+        imageView = findViewById(R.id.profilePhoto);
 
         setFields(profile);
     }
@@ -54,7 +60,14 @@ public class ViewProfileActivity extends AppCompatActivity {
         positionView.setText(profile.getPosition());
         pointsToAwardView.setText(String.valueOf(profile.getPointsToAward()));
         storyView.setText(profile.getStory());
+        imageView.setImageBitmap(textToImage(profile.getBit46EncodedPhoto()));
     }
 
-
+    public Bitmap textToImage(String imageString64) {
+        if (imageString64 == null) {
+            return null;
+        }
+        byte[] imageBytes = Base64.decode(imageString64, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+    }
 }

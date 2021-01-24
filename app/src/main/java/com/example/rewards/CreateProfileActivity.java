@@ -1,14 +1,9 @@
 package com.example.rewards;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.LayoutInflater;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,13 +24,12 @@ import com.example.rewards.domain.Profile;
 import com.example.rewards.runnable.CreateProfileAPIRunnable;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
-
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
@@ -180,11 +174,19 @@ public class CreateProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", (dialog, id) -> {
             Profile profile = createProfile();
             saveProfile(profile);
+            displayProfile(profile);
         });
         builder.setNegativeButton("CANCEL", (dialog, id) -> {});
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void displayProfile(Profile profile) {
+        Intent intent = new Intent(this, ViewProfileActivity.class);
+        Gson gson = new Gson();
+        intent.putExtra(this.getString(R.string.profile), gson.toJson(profile));
+        this.startActivity(intent);
     }
 
     private void saveProfile(Profile profile) {
@@ -200,7 +202,30 @@ public class CreateProfileActivity extends AppCompatActivity {
         profile.setDepartment(departmentEditText.getText().toString());
         profile.setPosition(titleEditText.getText().toString());
         profile.setStory(storyEditText.getText().toString());
+        profile.setBit46EncodedPhoto(getImageInBase64(imageButton));
 
         return profile;
+    }
+
+    public String getImageInBase64(ImageButton imageButton) {
+        BitmapDrawable drawable = (BitmapDrawable) imageButton.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+
+        int quality = 50;
+        String base64 = encodeBase64(bitmap, quality);
+
+        while (base64.length() > 100000) {
+            quality -= 5;
+            base64 = encodeBase64(bitmap, quality);
+        }
+
+        return base64;
+    }
+
+    private String encodeBase64(Bitmap origBitmap, int quality) {
+        ByteArrayOutputStream bitmapAsByteArrayStream = new ByteArrayOutputStream();
+        origBitmap.compress(Bitmap.CompressFormat.JPEG, quality, bitmapAsByteArrayStream);
+
+        return Base64.encodeToString(bitmapAsByteArrayStream.toByteArray(), Base64.DEFAULT);
     }
 }

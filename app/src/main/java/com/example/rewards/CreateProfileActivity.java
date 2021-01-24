@@ -3,6 +3,7 @@ package com.example.rewards;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
@@ -11,6 +12,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +23,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +34,8 @@ import android.widget.Toast;
 
 import com.example.rewards.domain.Profile;
 import com.example.rewards.runnable.CreateProfileAPIRunnable;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
@@ -36,9 +43,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Locale;
 
 public class CreateProfileActivity extends AppCompatActivity {
+
+    private static final String TAG = "CreateProfileActivity";
 
     private static final int MAX_LEN = 360;
     private EditText usernameEditText;
@@ -54,6 +64,10 @@ public class CreateProfileActivity extends AppCompatActivity {
 
     private final int REQUEST_IMAGE_GALLERY = 1;
     private final int REQUEST_IMAGE_CAPTURE = 2;
+    private static final int LOCATION_REQUEST = 111;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+    private static String locationString = "Unspecified Location";
 
     private File currentImageFile;
 
@@ -79,6 +93,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         storyLabel.setText(getString(R.string.your_story, 0, MAX_LEN));
         setupStoryEditText();
         imageButton = findViewById(R.id.profileImage);
+
+        mFusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(this);
     }
 
     private void setupStoryEditText() {
@@ -147,6 +164,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     public void doGallery() {
+//        verifyOrObtainGalleryPermisson();
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, REQUEST_IMAGE_GALLERY);
@@ -188,39 +206,39 @@ public class CreateProfileActivity extends AppCompatActivity {
         );
     }
 
-    private void verifyOrObtainGalleryPermisson() {
-        try {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_IMAGE_GALLERY);
-            } else {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        if (requestCode == REQUEST_IMAGE_GALLERY) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent galleryIntent = new Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("User Denied Gallery Access");
-                builder.setIcon(R.drawable.icon);
-                builder.setMessage(
-                        "You must allow Rewards to access you Gallery in order to choose a photo");
-                builder.setPositiveButton("OK", (dialogue, id) -> {
-                });
-            }
-        }
-    }
+//    private void verifyOrObtainGalleryPermisson() {
+//        try {
+//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_IMAGE_GALLERY);
+//            } else {
+//                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+//    {
+//        if (requestCode == REQUEST_IMAGE_GALLERY) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Intent galleryIntent = new Intent(
+//                        Intent.ACTION_PICK,
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
+//            } else {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                builder.setTitle("User Denied Gallery Access");
+//                builder.setIcon(R.drawable.icon);
+//                builder.setMessage(
+//                        "You must allow Rewards to access you Gallery in order to choose a photo");
+//                builder.setPositiveButton("OK", (dialogue, id) -> {
+//                });
+//            }
+//        }
+//    }
 
     private void processGallery(Intent data) {
         Uri galleryImageUri = data.getData();
@@ -274,6 +292,8 @@ public class CreateProfileActivity extends AppCompatActivity {
         profile.setStory(storyEditText.getText().toString());
         profile.setBit46EncodedPhoto(getImageInBase64(imageButton));
         profile.setRemainingPointsToAward(1000);
+        determineLocation();
+        profile.setLocation(locationString);
 
         return profile;
     }
@@ -298,5 +318,52 @@ public class CreateProfileActivity extends AppCompatActivity {
         origBitmap.compress(Bitmap.CompressFormat.JPEG, quality, bitmapAsByteArrayStream);
 
         return Base64.encodeToString(bitmapAsByteArrayStream.toByteArray(), Base64.DEFAULT);
+    }
+
+    private void determineLocation() {
+        if (checkPermission()) {
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, (location) -> {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            locationString = getPlace(location);
+                        }
+                    })
+                    .addOnFailureListener(this, e -> {
+                        Log.i(TAG, "determineLocation error: " + e.getMessage());
+                    });
+        }
+    }
+
+    private boolean checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    }, LOCATION_REQUEST);
+            return false;
+        }
+        return true;
+    }
+
+
+    private String getPlace(Location loc) {
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses;
+
+        try {
+            addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            return city + ", " + state + "\n\nProvider: " + loc.getProvider();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

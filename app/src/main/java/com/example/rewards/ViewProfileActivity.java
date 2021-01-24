@@ -57,7 +57,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         firstLastNameView.setText(getString(
                 R.string.last_first_name, profile.getLastName(), profile.getFirstName()));
         usernameView.setText(getString(R.string.username_in_parens, profile.getUsername()));
-        locationView.setText("todo location"); //todo
+        locationView.setText(profile.getLocation());
         pointsAwardedView.setText(String.valueOf(profile.getPointsAwarded()));
         departmentView.setText(profile.getDepartment());
         positionView.setText(profile.getPosition());
@@ -69,7 +69,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_profile_menu, menu);
+        getMenuInflater().inflate(R.menu.view_profile_menu, menu);
         return true;
     }
 

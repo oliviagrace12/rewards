@@ -53,7 +53,7 @@ public class CreateProfileAPIRunnable implements Runnable {
                 .appendQueryParameter("position", profile.getPosition())
                 .appendQueryParameter("password", profile.getPassword())
                 .appendQueryParameter("remainingPointsToAward", profile.getRemainingPointsToAward() + "")
-                .appendQueryParameter("location", "todo") //todo
+                .appendQueryParameter("location", profile.getLocation())
                 .build().toString();
     }
 

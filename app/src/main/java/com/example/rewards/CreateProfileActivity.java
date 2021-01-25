@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.example.rewards.domain.Profile;
 import com.example.rewards.runnable.CreateProfileAPIRunnable;
+import com.example.rewards.runnable.UpdateProfileAPIRunnable;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
@@ -49,6 +50,8 @@ import java.util.Locale;
 public class CreateProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateProfileActivity";
+
+    private boolean isEdit = false;
 
     private static final int MAX_LEN = 360;
     private EditText usernameEditText;
@@ -80,6 +83,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.drawable.icon);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
+        isEdit = getIntent().getBooleanExtra(this.getString(R.string.is_edit), false);
         apiKey = getIntent().getStringExtra(this.getString(R.string.api_key));
 
         usernameEditText = findViewById(R.id.inputUsername);
@@ -90,12 +94,44 @@ public class CreateProfileActivity extends AppCompatActivity {
         titleEditText = findViewById(R.id.inputTitle);
         storyEditText = findViewById(R.id.yourStoryInput);
         storyLabel = findViewById(R.id.yourStoryLabel);
-        storyLabel.setText(getString(R.string.your_story, 0, MAX_LEN));
-        setupStoryEditText();
         imageButton = findViewById(R.id.profileImage);
+
+        if (isEdit) {
+            usernameEditText.setEnabled(false);
+            usernameEditText.setFocusable(false);
+            fillInProfileData(getIntent().getStringExtra(getString(R.string.profile )));
+        } else {
+            usernameEditText.setEnabled(true);
+            usernameEditText.setFocusable(true);
+            storyLabel.setText(getString(R.string.your_story, 0, MAX_LEN));
+        }
+
+        setupStoryEditText();
 
         mFusedLocationClient =
                 LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    private void fillInProfileData(String stringExtra) {
+        Gson gson = new Gson();
+        Profile profile = gson.fromJson(stringExtra, Profile.class);
+        usernameEditText.setText(profile.getUsername());
+        passwordEditText.setText(profile.getPassword());
+        firstNameEditText.setText(profile.getFirstName());
+        lastNameEditText.setText(profile.getLastName());
+        departmentEditText.setText(profile.getDepartment());
+        titleEditText.setText(profile.getPosition());
+        storyEditText.setText(profile.getStory());
+        storyLabel.setText(getString(R.string.your_story, storyEditText.getText().toString().length(), MAX_LEN));
+        imageButton.setImageBitmap(textToImage(profile.getBit46EncodedPhoto()));
+    }
+
+    public Bitmap textToImage(String imageString64) {
+        if (imageString64 == null) {
+            return null;
+        }
+        byte[] imageBytes = Base64.decode(imageString64, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
     private void setupStoryEditText() {
@@ -105,14 +141,12 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         storyEditText.addTextChangedListener(
                 new TextWatcher() {
-
                     @Override
                     public void afterTextChanged(Editable s) {
                         int len = s.toString().length();
                         String countText = getString(R.string.your_story, len, MAX_LEN);
                         storyLabel.setText(countText);
                     }
-
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     }
@@ -163,7 +197,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
 
-    public void doGallery() {
+    private void doGallery() {
 //        verifyOrObtainGalleryPermisson();
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
@@ -273,12 +307,17 @@ public class CreateProfileActivity extends AppCompatActivity {
     private void displayProfile(Profile profile) {
         Intent intent = new Intent(this, ViewProfileActivity.class);
         Gson gson = new Gson();
-        intent.putExtra(this.getString(R.string.profile), gson.toJson(profile));
+        intent.putExtra(getString(R.string.profile), gson.toJson(profile));
+        intent.putExtra(getString(R.string.api_key), apiKey);
         this.startActivity(intent);
     }
 
     private void saveProfile(Profile profile) {
-        new Thread(new CreateProfileAPIRunnable(profile, apiKey)).start();
+        if (isEdit) {
+            new Thread(new UpdateProfileAPIRunnable(profile, apiKey)).start();
+        } else {
+            new Thread(new CreateProfileAPIRunnable(profile, apiKey)).start();
+        }
     }
 
     private Profile createProfile() {

@@ -2,11 +2,13 @@ package com.example.rewards;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +27,9 @@ public class ViewProfileActivity extends AppCompatActivity {
     private TextView storyView;
     private ImageView imageView;
     private TextView rewardsLabel;
+    private String apiKey;
+
+    private String profileJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +40,8 @@ public class ViewProfileActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.drawable.icon);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-        String profileJson = getIntent().getStringExtra(getString(R.string.profile));
+        profileJson = getIntent().getStringExtra(getString(R.string.profile));
+        apiKey = getIntent().getStringExtra(getString(R.string.api_key));
         Gson gson = new Gson();
         Profile profile = gson.fromJson(profileJson, Profile.class);
 
@@ -70,6 +76,18 @@ public class ViewProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_profile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.editProfileOption) {
+            Intent intent = new Intent(this, CreateProfileActivity.class);
+            intent.putExtra(getString(R.string.api_key), apiKey);
+            intent.putExtra(getString(R.string.is_edit), true);
+            intent.putExtra(getString(R.string.profile), profileJson);
+            startActivity(intent);
+        }
         return true;
     }
 

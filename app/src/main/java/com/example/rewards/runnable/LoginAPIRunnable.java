@@ -54,6 +54,7 @@ public class LoginAPIRunnable implements Runnable {
                 mainActivity.getApplicationContext(), ViewProfileActivity.class);
         Gson gson = new Gson();
         intent.putExtra(mainActivity.getString(R.string.profile), gson.toJson(profile));
+        intent.putExtra(mainActivity.getString(R.string.api_key), apiKey);
         mainActivity.startActivity(intent);
     }
 

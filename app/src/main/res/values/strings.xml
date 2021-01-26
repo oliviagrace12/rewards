@@ -28,4 +28,8 @@
     <string name="rewards_profile">Reward History (%d):</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="is_edit">isEdit</string>
+    <string name="view_leaderboard">View Leaderboard</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="create_profile">Create Profile</string>
+    <string name="your_profile">Your Profile</string>
 </resources>

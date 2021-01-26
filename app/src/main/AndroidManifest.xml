@@ -26,7 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rewards"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".LeaderboardActivity"></activity>
+        <activity android:name=".EditProfileActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

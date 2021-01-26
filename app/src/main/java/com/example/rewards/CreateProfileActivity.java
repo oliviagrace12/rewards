@@ -97,10 +97,12 @@ public class CreateProfileActivity extends AppCompatActivity {
         imageButton = findViewById(R.id.profileImage);
 
         if (isEdit) {
+            getSupportActionBar().setTitle(getString(R.string.edit_profile));
             usernameEditText.setEnabled(false);
             usernameEditText.setFocusable(false);
             fillInProfileData(getIntent().getStringExtra(getString(R.string.profile )));
         } else {
+            getSupportActionBar().setTitle(getString(R.string.create_profile));
             usernameEditText.setEnabled(true);
             usernameEditText.setFocusable(true);
             storyLabel.setText(getString(R.string.your_story, 0, MAX_LEN));

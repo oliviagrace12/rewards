@@ -7,4 +7,9 @@
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/edit_profile"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/leaderboardOption"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="@string/view_leaderboard"
+        app:showAsAction="ifRoom" />
 </menu>

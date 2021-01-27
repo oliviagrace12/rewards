@@ -9,24 +9,24 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.rewards.domain.Profile;
+import com.example.rewards.runnable.GetAllProfilesAPIRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderboardActivity
-        extends AppCompatActivity
-        implements View.OnClickListener, View.OnLongClickListener {
-
+public class LeaderboardActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private RecyclerView recyclerView;
     private List<Profile> profiles = new ArrayList<>();
     private ProfileAdapter adapter;
-
+    private String apiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
+
+        apiKey = getIntent().getStringExtra(getString(R.string.api_key));
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.icon);
@@ -40,6 +40,8 @@ public class LeaderboardActivity
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        new Thread(new GetAllProfilesAPIRunnable(apiKey, this));
+
     }
 
     @Override
@@ -50,5 +52,9 @@ public class LeaderboardActivity
     @Override
     public boolean onLongClick(View v) {
         return false;
+    }
+
+    public void notifyDataSetChanged() {
+        adapter.notifyDataSetChanged();
     }
 }

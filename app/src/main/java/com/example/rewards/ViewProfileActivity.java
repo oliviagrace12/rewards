@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rewards.domain.Profile;
 import com.example.rewards.domain.Reward;
+import com.example.rewards.runnable.DeleteProfileAPIRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +114,22 @@ public class ViewProfileActivity extends AppCompatActivity implements View.OnCli
             intent.putExtra(getString(R.string.api_key), apiKey);
             intent.putExtra(getString(R.string.profile), profile);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.deleteProfileOption) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(R.drawable.icon);
+            builder.setTitle("Delete Profile?");
+            builder.setMessage(
+                    "Delete Profile for " + profile.getFirstName() + " " + profile.getLastName()
+                            + "? (The Rewards app will be closed upon deletion)");
+            builder.setPositiveButton("OK", (dialogue, id) -> {
+                new Thread(
+                        new DeleteProfileAPIRunnable(apiKey, profile.getUsername(), this))
+                        .start();
+            });
+            builder.setNegativeButton("CANCEL", (dialogue, id) -> {});
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
         return true;
     }

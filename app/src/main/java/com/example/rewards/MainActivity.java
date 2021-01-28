@@ -1,10 +1,12 @@
 package com.example.rewards;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences.hasValue(getString(R.string.password));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(View view) {
 
         CheckBox rememberLogin = findViewById(R.id.loginCheckBox);
@@ -64,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new LoginAPIRunnable(username, password,
                 sharedPreferences.getValue(this.getString(R.string.api_key)), this))
                 .start();
+    }
+
+    public void displayLoginErrorDialogue(String errorMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Unable To Login");
+        builder.setIcon(R.drawable.icon);
+        builder.setMessage("Reason: " + errorMessage);
+        builder.setPositiveButton("OK", (dialogue, id) -> {});
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void createNewProfile(View view) {

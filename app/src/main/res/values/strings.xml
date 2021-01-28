@@ -35,4 +35,5 @@
     <string name="reward_points_to_send">Reward points to send:</string>
     <string name="comment_label">Comment: (%1$d of %2$d)</string>
     <string name="current_user_profile">current_user_profile</string>
+    <string name="delete_profile">Delete Profile</string>
 </resources>

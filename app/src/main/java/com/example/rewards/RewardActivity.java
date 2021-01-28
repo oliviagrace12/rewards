@@ -21,8 +21,6 @@ import com.example.rewards.domain.Profile;
 import com.example.rewards.domain.Reward;
 import com.example.rewards.runnable.RewardsAPIRunnable;
 
-import java.time.LocalDate;
-
 public class RewardActivity extends AppCompatActivity {
 
     private static final int MAX_LEN = 80;
@@ -129,20 +127,9 @@ public class RewardActivity extends AppCompatActivity {
             Reward reward = createReward();
 
             new Thread(new RewardsAPIRunnable(
-                            apiKey, reward, profile.getUsername(), currentUserProfile.getUsername()))
+                            apiKey, reward, profile.getUsername(),
+                    currentUserProfile.getUsername(), this))
                     .start();
-
-            currentUserProfile.setRemainingPointsToAward(
-                    currentUserProfile.getRemainingPointsToAward()
-                            - Integer.parseInt(pointsToSendEditText.getText().toString()));
-
-            profile.addReward(reward);
-
-            Intent intent = new Intent(this, LeaderboardActivity.class);
-            intent.putExtra(getString(R.string.api_key), apiKey);
-            intent.putExtra(getString(R.string.profile), currentUserProfile);
-            startActivity(intent);
-
         });
         builder.setNegativeButton("CANCEL", (dialog, id) -> {
         });
@@ -167,5 +154,19 @@ public class RewardActivity extends AppCompatActivity {
         }
         byte[] imageBytes = Base64.decode(imageString64, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+    }
+
+    public void displayRewardErrorDialogue(String errorMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Unable to Award Points");
+        builder.setIcon(R.drawable.icon);
+        builder.setMessage("Reason: " + errorMessage);
+        builder.setPositiveButton("OK", (dialogue, id) -> {});
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public Profile getCurrentUserProfile() {
+        return currentUserProfile;
     }
 }

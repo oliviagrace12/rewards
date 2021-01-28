@@ -1,5 +1,6 @@
 package com.example.rewards.runnable;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -50,6 +51,9 @@ public class LoginAPIRunnable implements Runnable {
     @Override
     public void run() {
         String responseJson = requestLoginData(createUrlString());
+        if (responseJson.isEmpty()) {
+            return;
+        }
         Profile profile = null;
         try {
             profile = parseData(responseJson);
@@ -128,6 +132,7 @@ public class LoginAPIRunnable implements Runnable {
                 Log.i(TAG, "HTTP ResponseCode NOT OK: " + conn.getResponseCode());
                 String errorMessage = readFromStream(conn.getErrorStream());
                 Log.i(TAG, "Error message: " + errorMessage);
+                mainActivity.runOnUiThread(() -> mainActivity.displayLoginErrorDialogue(errorMessage));
                 return "";
             } else {
                 String responseMessage = readFromStream(conn.getInputStream());

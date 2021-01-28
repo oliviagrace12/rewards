@@ -7,14 +7,22 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rewards.domain.Profile;
+import com.example.rewards.domain.Reward;
 
-public class ViewProfileActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ViewProfileActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener  {
 
     private TextView firstLastNameView;
     private TextView usernameView;
@@ -29,6 +37,10 @@ public class ViewProfileActivity extends AppCompatActivity {
     private String apiKey;
 
     private Profile profile;
+
+    private List<Reward> rewards = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RewardAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +65,13 @@ public class ViewProfileActivity extends AppCompatActivity {
         storyView = findViewById(R.id.profileStoryValue);
         imageView = findViewById(R.id.profilePhoto);
         rewardsLabel = findViewById(R.id.profileRewardsLabel);
+
+        recyclerView = findViewById(R.id.profileRewardsRecyclerView);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
+        adapter = new RewardAdapter(profile.getRewards(), this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         setFields();
     }
@@ -100,5 +119,15 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
         byte[] imageBytes = Base64.decode(imageString64, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
     }
 }

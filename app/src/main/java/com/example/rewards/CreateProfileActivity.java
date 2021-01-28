@@ -1,5 +1,6 @@
 package com.example.rewards;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -16,6 +17,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -164,6 +166,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
@@ -201,7 +204,6 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void doGallery() {
-//        verifyOrObtainGalleryPermisson();
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, REQUEST_IMAGE_GALLERY);
@@ -258,6 +260,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         imageButton.setImageBitmap(selectedImage);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void displaySaveDialogue() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Save Changes?");
@@ -265,7 +268,6 @@ public class CreateProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", (dialog, id) -> {
             Profile profile = createProfile();
             saveProfile(profile);
-            displayProfile(profile);
         });
         builder.setNegativeButton("CANCEL", (dialog, id) -> {
         });
@@ -274,19 +276,32 @@ public class CreateProfileActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void displayProfile(Profile profile) {
+    public void displayProfile(Profile profile) {
         Intent intent = new Intent(this, ViewProfileActivity.class);
         intent.putExtra(getString(R.string.profile), profile);
         intent.putExtra(getString(R.string.api_key), apiKey);
         this.startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void saveProfile(Profile profile) {
         if (isEdit) {
-            new Thread(new UpdateProfileAPIRunnable(profile, apiKey)).start();
+            new Thread(new UpdateProfileAPIRunnable(profile, apiKey, this)).start();
         } else {
-            new Thread(new CreateProfileAPIRunnable(profile, apiKey)).start();
+            new Thread(new CreateProfileAPIRunnable(profile, apiKey, this)).start();
         }
+    }
+
+    public void displayErrorDialogue(String errorMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error Saving Profile");
+        builder.setMessage("Reason: " + errorMessage);
+        builder.setIcon(R.drawable.logo);
+        builder.setPositiveButton("OK", (dialog, id) -> {
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private Profile createProfile() {
@@ -302,6 +317,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         profile.setRemainingPointsToAward(1000);
         determineLocation();
         profile.setLocation(locationString);
+
 
         return profile;
     }

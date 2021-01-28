@@ -73,6 +73,9 @@ public class ViewProfileActivity extends AppCompatActivity implements View.OnCli
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        rewards.addAll(profile.getRewards());
+        adapter.notifyDataSetChanged();
+
         setFields();
     }
 

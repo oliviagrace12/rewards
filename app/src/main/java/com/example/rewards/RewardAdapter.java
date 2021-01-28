@@ -38,7 +38,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder>  {
 
         holder.date.setText(reward.getAwardDate().toString().substring(0,10));
         holder.giverName.setText(reward.getGiverName());
-        holder.points.setText(reward.getAmount());
+        holder.points.setText(reward.getAmount().toString());
         holder.note.setText(reward.getNote());
     }
 

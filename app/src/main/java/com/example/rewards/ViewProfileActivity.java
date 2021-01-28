@@ -1,7 +1,5 @@
 package com.example.rewards;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,12 +7,12 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.rewards.domain.Profile;
-import com.google.gson.Gson;
 
 public class ViewProfileActivity extends AppCompatActivity {
 
@@ -30,7 +28,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     private TextView rewardsLabel;
     private String apiKey;
 
-    private String profileJson;
+    private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +40,8 @@ public class ViewProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.your_profile));
 
-        profileJson = getIntent().getStringExtra(getString(R.string.profile));
+        profile = (Profile) getIntent().getSerializableExtra(getString(R.string.profile));
         apiKey = getIntent().getStringExtra(getString(R.string.api_key));
-        Gson gson = new Gson();
-        Profile profile = gson.fromJson(profileJson, Profile.class);
 
         firstLastNameView = findViewById(R.id.profileFirstLastName);
         usernameView = findViewById(R.id.profileUsername);
@@ -58,10 +54,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         imageView = findViewById(R.id.profilePhoto);
         rewardsLabel = findViewById(R.id.profileRewardsLabel);
 
-        setFields(profile);
+        setFields();
     }
 
-    private void setFields(Profile profile) {
+    private void setFields() {
         firstLastNameView.setText(getString(
                 R.string.last_first_name, profile.getLastName(), profile.getFirstName()));
         usernameView.setText(getString(R.string.username_in_parens, profile.getUsername()));
@@ -87,11 +83,12 @@ public class ViewProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(this, CreateProfileActivity.class);
             intent.putExtra(getString(R.string.api_key), apiKey);
             intent.putExtra(getString(R.string.is_edit), true);
-            intent.putExtra(getString(R.string.profile), profileJson);
+            intent.putExtra(getString(R.string.profile), profile);
             startActivity(intent);
         } else if (item.getItemId() == R.id.leaderboardOption) {
             Intent intent = new Intent(this, LeaderboardActivity.class);
             intent.putExtra(getString(R.string.api_key), apiKey);
+            intent.putExtra(getString(R.string.profile), profile);
             startActivity(intent);
         }
         return true;

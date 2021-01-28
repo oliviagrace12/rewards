@@ -28,7 +28,6 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".RewardActivity"></activity>
         <activity android:name=".LeaderboardActivity" />
-        <activity android:name=".EditProfileActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

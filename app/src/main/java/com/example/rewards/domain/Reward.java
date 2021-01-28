@@ -1,8 +1,9 @@
 package com.example.rewards.domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Reward {
+public class Reward implements Serializable {
     private String giverName;
     private int amount = 0;
     private String note;
@@ -16,7 +17,7 @@ public class Reward {
         this.giverName = giverName;
     }
 
-    public int getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 

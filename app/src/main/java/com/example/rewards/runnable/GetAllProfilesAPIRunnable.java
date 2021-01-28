@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi;
 import com.example.rewards.LeaderboardActivity;
 import com.example.rewards.domain.Profile;
 import com.example.rewards.domain.Reward;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +45,7 @@ public class GetAllProfilesAPIRunnable implements Runnable {
         String jsonResponse = requestData(createUrlString());
         try {
             List<Profile> profiles = parse(jsonResponse);
-            leaderboardActivity.runOnUiThread(() -> leaderboardActivity.setProfiles(profiles));
+            leaderboardActivity.runOnUiThread(() -> leaderboardActivity.updateProfiles(profiles));
         } catch (JSONException e) {
             Log.w(TAG, "Could not parse profiles: " + e.getMessage());
         }
@@ -87,7 +86,7 @@ public class GetAllProfilesAPIRunnable implements Runnable {
     }
 
     private LocalDate getDate(String awardDate) {
-        return LocalDate.parse(awardDate, dateTimeFormatter);
+        return LocalDate.parse(awardDate.replace('T', ' '), dateTimeFormatter);
     }
 
     private String createUrlString() {

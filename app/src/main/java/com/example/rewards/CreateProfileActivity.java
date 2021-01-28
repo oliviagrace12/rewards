@@ -37,7 +37,6 @@ import com.example.rewards.runnable.CreateProfileAPIRunnable;
 import com.example.rewards.runnable.UpdateProfileAPIRunnable;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -100,7 +99,8 @@ public class CreateProfileActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getString(R.string.edit_profile));
             usernameEditText.setEnabled(false);
             usernameEditText.setFocusable(false);
-            fillInProfileData(getIntent().getStringExtra(getString(R.string.profile )));
+            fillInProfileData((Profile) getIntent().getSerializableExtra(
+                    getString(R.string.profile)));
         } else {
             getSupportActionBar().setTitle(getString(R.string.create_profile));
             usernameEditText.setEnabled(true);
@@ -114,9 +114,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 LocationServices.getFusedLocationProviderClient(this);
     }
 
-    private void fillInProfileData(String stringExtra) {
-        Gson gson = new Gson();
-        Profile profile = gson.fromJson(stringExtra, Profile.class);
+    private void fillInProfileData(Profile profile) {
         usernameEditText.setText(profile.getUsername());
         passwordEditText.setText(profile.getPassword());
         firstNameEditText.setText(profile.getFirstName());
@@ -137,7 +135,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void setupStoryEditText() {
-        storyEditText.setFilters(new InputFilter[] {
+        storyEditText.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(MAX_LEN) // Specifies a max text length
         });
 
@@ -149,9 +147,11 @@ public class CreateProfileActivity extends AppCompatActivity {
                         String countText = getString(R.string.your_story, len, MAX_LEN);
                         storyLabel.setText(countText);
                     }
+
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     }
+
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
@@ -178,7 +178,8 @@ public class CreateProfileActivity extends AppCompatActivity {
         builder.setMessage("Take picture from:");
         builder.setNegativeButton("GALLERY", (dialog, id) -> doGallery());
         builder.setPositiveButton("CAMERA", (dialog, id) -> doCamera());
-        builder.setNeutralButton("CANCEL", (dialog, id) -> {});
+        builder.setNeutralButton("CANCEL", (dialog, id) -> {
+        });
         builder.setIcon(R.drawable.icon);
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -242,40 +243,6 @@ public class CreateProfileActivity extends AppCompatActivity {
         );
     }
 
-//    private void verifyOrObtainGalleryPermisson() {
-//        try {
-//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_IMAGE_GALLERY);
-//            } else {
-//                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-//    {
-//        if (requestCode == REQUEST_IMAGE_GALLERY) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Intent galleryIntent = new Intent(
-//                        Intent.ACTION_PICK,
-//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
-//            } else {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setTitle("User Denied Gallery Access");
-//                builder.setIcon(R.drawable.icon);
-//                builder.setMessage(
-//                        "You must allow Rewards to access you Gallery in order to choose a photo");
-//                builder.setPositiveButton("OK", (dialogue, id) -> {
-//                });
-//            }
-//        }
-//    }
-
     private void processGallery(Intent data) {
         Uri galleryImageUri = data.getData();
         if (galleryImageUri == null) {
@@ -300,7 +267,8 @@ public class CreateProfileActivity extends AppCompatActivity {
             saveProfile(profile);
             displayProfile(profile);
         });
-        builder.setNegativeButton("CANCEL", (dialog, id) -> {});
+        builder.setNegativeButton("CANCEL", (dialog, id) -> {
+        });
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -308,8 +276,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
     private void displayProfile(Profile profile) {
         Intent intent = new Intent(this, ViewProfileActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra(getString(R.string.profile), gson.toJson(profile));
+        intent.putExtra(getString(R.string.profile), profile);
         intent.putExtra(getString(R.string.api_key), apiKey);
         this.startActivity(intent);
     }

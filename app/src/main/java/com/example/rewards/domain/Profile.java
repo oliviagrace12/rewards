@@ -1,9 +1,10 @@
 package com.example.rewards.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Profile {
+public class Profile implements Serializable {
 
     private String username;
     private String password;
@@ -14,7 +15,6 @@ public class Profile {
     private String story;
     private String bit46EncodedPhoto = "";
     private List<Reward> rewards = new ArrayList<>();
-    private int pointsAwarded = 0;
     private int remainingPointsToAward;
     private String location;
 
@@ -98,12 +98,11 @@ public class Profile {
         this.remainingPointsToAward = remainingPointsToAward;
     }
 
-    public int getPointsAwarded() {
-        return pointsAwarded;
-    }
-
-    public void setPointsAwarded(int pointsAwarded) {
-        this.pointsAwarded = pointsAwarded;
+    public Integer getPointsAwarded() {
+        if (rewards.isEmpty()) {
+            return 0;
+        }
+        return rewards.stream().map(Reward::getAmount).reduce(Integer::sum).get();
     }
 
     public String getLocation() {
@@ -112,5 +111,9 @@ public class Profile {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void addReward(Reward reward) {
+        rewards.add(reward);
     }
 }

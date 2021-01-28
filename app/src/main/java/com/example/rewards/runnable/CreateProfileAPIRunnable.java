@@ -1,15 +1,9 @@
 package com.example.rewards.runnable;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.rewards.CreateProfileActivity;
-import com.example.rewards.R;
-import com.example.rewards.ViewProfileActivity;
 import com.example.rewards.domain.Profile;
-import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;

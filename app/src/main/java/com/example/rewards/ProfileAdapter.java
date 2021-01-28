@@ -18,10 +18,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
 
     private final List<Profile> profiles;
     private final LeaderboardActivity leaderboardActivity;
+    private final String currentUserUsername;
 
-    public ProfileAdapter(List<Profile> profiles, LeaderboardActivity leaderboardActivity) {
+    public ProfileAdapter(List<Profile> profiles, LeaderboardActivity leaderboardActivity,
+                          String currentUserUsername) {
         this.profiles = profiles;
         this.leaderboardActivity = leaderboardActivity;
+        this.currentUserUsername = currentUserUsername;
     }
 
     @NonNull
@@ -44,7 +47,16 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
                 profile.getLastName(), profile.getFirstName()));
         holder.titleDept.setText(leaderboardActivity.getString(R.string.last_first_name,
                 profile.getPosition(), profile.getDepartment()));
-        holder.points.setText(profile.getPointsAwarded() + "");
+        holder.points.setText(String.valueOf(profile.getPointsAwarded()));
+
+        if (profile.getUsername().equals(currentUserUsername)) {
+            holder.firstLastName.setTextColor(
+                    leaderboardActivity.getResources().getColor(R.color.dark_orange, null));
+            holder.titleDept.setTextColor(
+                    leaderboardActivity.getResources().getColor(R.color.dark_orange, null));
+            holder.points.setTextColor(
+                    leaderboardActivity.getResources().getColor(R.color.dark_orange, null));
+        }
 
     }
 

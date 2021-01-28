@@ -8,7 +8,6 @@ import com.example.rewards.MainActivity;
 import com.example.rewards.R;
 import com.example.rewards.ViewProfileActivity;
 import com.example.rewards.domain.Profile;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,8 +51,7 @@ public class LoginAPIRunnable implements Runnable {
     private void displayProfile(Profile profile) {
         Intent intent = new Intent(
                 mainActivity.getApplicationContext(), ViewProfileActivity.class);
-        Gson gson = new Gson();
-        intent.putExtra(mainActivity.getString(R.string.profile), gson.toJson(profile));
+        intent.putExtra(mainActivity.getString(R.string.profile), profile);
         intent.putExtra(mainActivity.getString(R.string.api_key), apiKey);
         mainActivity.startActivity(intent);
     }

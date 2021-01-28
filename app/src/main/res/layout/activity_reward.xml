@@ -6,4 +6,148 @@
     android:layout_height="match_parent"
     tools:context=".RewardActivity">
 
+    <TextView
+        android:id="@+id/rewardName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/rewardPhoto"
+        android:layout_width="152dp"
+        android:layout_height="189dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/rewardName"
+        app:layout_constraintTop_toBottomOf="@+id/rewardName"
+        app:srcCompat="@drawable/default_photo" />
+
+    <TextView
+        android:id="@+id/rewardPointsAwardedLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/points_awarded"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/rewardPhoto"
+        app:layout_constraintTop_toTopOf="@+id/rewardPhoto" />
+
+    <TextView
+        android:id="@+id/rewardDepartmentLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/department_label_string"
+        app:layout_constraintStart_toStartOf="@+id/rewardPointsAwardedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rewardPointsAwardedValue" />
+
+    <TextView
+        android:id="@+id/rewardPositionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/position_label"
+        app:layout_constraintStart_toEndOf="@+id/rewardPhoto"
+        app:layout_constraintStart_toStartOf="@+id/rewardPointsAwardedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rewardDepartmentValue" />
+
+    <TextView
+        android:id="@+id/rewardPointsAwardedValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/rewardPointsAwardedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rewardPointsAwardedLabel" />
+
+    <TextView
+        android:id="@+id/rewardDepartmentValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/rewardPointsAwardedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rewardDepartmentLabel" />
+
+    <TextView
+        android:id="@+id/rewardPositionValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/rewardPointsAwardedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rewardPositionTitle" />
+
+    <TextView
+        android:id="@+id/rewardStoryLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/your_story_view"
+        app:layout_constraintStart_toStartOf="@+id/rewardName"
+        app:layout_constraintTop_toBottomOf="@+id/rewardPhoto" />
+
+    <TextView
+        android:id="@+id/rewardStoryValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/rewardName"
+        app:layout_constraintTop_toBottomOf="@+id/rewardStoryLabel" />
+
+    <TextView
+        android:id="@+id/rewardPointsToSendLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/reward_points_to_send"
+        app:layout_constraintStart_toStartOf="@+id/rewardName"
+        app:layout_constraintTop_toBottomOf="@+id/rewardStoryValue" />
+
+    <EditText
+        android:id="@+id/rewardPointsToSendValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@+id/rewardPointsToSendLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/rewardPointsToSendLabel" />
+
+    <TextView
+        android:id="@+id/rewardCommentLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/comment_label"
+        app:layout_constraintStart_toStartOf="@+id/rewardName"
+        app:layout_constraintTop_toBottomOf="@+id/rewardPointsToSendValue" />
+
+    <EditText
+        android:id="@+id/rewardCommentValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/rewardName"
+        app:layout_constraintTop_toBottomOf="@+id/rewardCommentLabel" />
 </androidx.constraintlayout.widget.ConstraintLayout>

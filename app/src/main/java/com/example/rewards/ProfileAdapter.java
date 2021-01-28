@@ -44,7 +44,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
                 profile.getLastName(), profile.getFirstName()));
         holder.titleDept.setText(leaderboardActivity.getString(R.string.last_first_name,
                 profile.getPosition(), profile.getDepartment()));
-        holder.points.setText(profile.getPointsAwarded());
+        holder.points.setText(profile.getPointsAwarded() + "");
 
     }
 

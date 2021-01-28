@@ -1,10 +1,12 @@
 package com.example.rewards;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -21,6 +23,7 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     private ProfileAdapter adapter;
     private String apiKey;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +43,7 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        new Thread(new GetAllProfilesAPIRunnable(apiKey, this));
-
+        new Thread(new GetAllProfilesAPIRunnable(apiKey, this)).start();
     }
 
     @Override
@@ -54,7 +56,9 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
         return false;
     }
 
-    public void notifyDataSetChanged() {
+    public void setProfiles(List<Profile> newProfiles) {
+        profiles.clear();
+        profiles.addAll(newProfiles);
         adapter.notifyDataSetChanged();
     }
 }

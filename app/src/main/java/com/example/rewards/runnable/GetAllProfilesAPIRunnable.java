@@ -1,7 +1,10 @@
 package com.example.rewards.runnable;
 
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.rewards.LeaderboardActivity;
 import com.example.rewards.domain.Profile;
@@ -19,13 +22,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class GetAllProfilesAPIRunnable implements Runnable {
 
     private static final String TAG = "GetAllProfilesAPIRunnable";
 
     private final String apiKey;
     private final LeaderboardActivity leaderboardActivity;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
     public GetAllProfilesAPIRunnable(String apiKey, LeaderboardActivity leaderboardActivity) {
@@ -37,14 +45,16 @@ public class GetAllProfilesAPIRunnable implements Runnable {
     public void run() {
         String jsonResponse = requestData(createUrlString());
         try {
-            parse(jsonResponse);
+            List<Profile> profiles = parse(jsonResponse);
+            leaderboardActivity.runOnUiThread(() -> leaderboardActivity.setProfiles(profiles));
         } catch (JSONException e) {
             Log.w(TAG, "Could not parse profiles: " + e.getMessage());
         }
     }
 
-    private void parse(String jsonResponse) throws JSONException {
+    private List<Profile> parse(String jsonResponse) throws JSONException {
         JSONArray jsonProfiles = new JSONArray(jsonResponse);
+        List<Profile> profiles = new ArrayList<>();
         for (int i = 0; i < jsonProfiles.length(); i++) {
             JSONObject jsonProfile = jsonProfiles.getJSONObject(i);
 
@@ -58,6 +68,7 @@ public class GetAllProfilesAPIRunnable implements Runnable {
             profile.setBit46EncodedPhoto(jsonProfile.getString("imageBytes"));
 
             JSONArray jsonRewards = jsonProfile.getJSONArray("rewardRecordViews");
+            List<Reward> rewards = new ArrayList<>();
             for (int j = 0; j < jsonRewards.length(); j++) {
                 JSONObject rewardJson = jsonRewards.getJSONObject(j);
                 Reward reward = new Reward();
@@ -65,16 +76,18 @@ public class GetAllProfilesAPIRunnable implements Runnable {
                 reward.setAmount(rewardJson.getInt("amount"));
                 reward.setNote(rewardJson.getString("note"));
                 reward.setAwardDate(getDate(rewardJson.getString("awardDate")));
+                rewards.add(reward);
             }
+            profile.setRewards(rewards);
 
-
+            profiles.add(profile);
         }
 
+        return profiles;
     }
 
     private LocalDate getDate(String awardDate) {
-        // TODO
-        return null;
+        return LocalDate.parse(awardDate, dateTimeFormatter);
     }
 
     private String createUrlString() {
